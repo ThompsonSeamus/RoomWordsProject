@@ -1,5 +1,6 @@
 package com.example.roomwordsproject;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -17,5 +18,5 @@ public interface WordDao {
     void deleteAll();
 
     @Query("SELECT * FROM word_table ORDER BY word COLLATE NOCASE ASC")
-    List<Word> getAllWords();
+    LiveData<List<Word>> getAllWords();
 }
