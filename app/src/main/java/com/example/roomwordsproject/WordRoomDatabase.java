@@ -7,10 +7,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
 @Database(entities = {Word.class}, version = 1, exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
@@ -31,6 +27,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
                             // if no Migration object.
                             // Migration is not part of this practical.
                             .fallbackToDestructiveMigration()
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -43,8 +40,30 @@ public abstract class WordRoomDatabase extends RoomDatabase {
                 @Override
                 public void onOpen (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
-                    new ThreadPoolExecutor(getAllWords.size()).execute(INSTANCE);
+                    new PopulateDbExecutor(INSTANCE);
                 }
             };
+
+    private static class PopulateDbExecutor{
+
+        private final WordDao mDao;
+        String[] words = {"dolphin", "crocodile", "cobra"};
+
+        PopulateDbExecutor(WordRoomDatabase db) {
+            mDao = db.wordDao();
+        }
+        protected Void doInBackground(final Void... params) {
+            // Start the app with a clean database every time.
+            // Not needed if you only populate the database
+            // when it is first created
+            mDao.deleteAll();
+
+            for (int i = 0; i <= words.length - 1; i++) {
+                Word word = new Word(words[i]);
+                mDao.insert(word);
+            }
+            return null;
+        }
+    }
 
 }

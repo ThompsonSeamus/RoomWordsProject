@@ -15,7 +15,7 @@ public class WordRepository {
     public WordRepository(Application application) {
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         mWordDao = db.wordDao();
-        mAllWords = mWordDao.getAllWords();
+        mAllWords = (LiveData<List<Word>>) mWordDao.getAllWords();
     }
 
     //returns words on live data and executes on separate threads
