@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.roomwordsproject.databinding.FragmentFirstBinding;
+import com.example.roomwordssample.R;
+import com.example.roomwordssample.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
 
