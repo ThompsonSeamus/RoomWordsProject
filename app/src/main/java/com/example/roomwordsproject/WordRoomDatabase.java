@@ -8,6 +8,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Database(entities = {Word.class}, version = 2, exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
@@ -15,6 +18,11 @@ public abstract class WordRoomDatabase extends RoomDatabase {
 
     //abstract constructor
     public abstract WordDao wordDao();
+
+    private static final int NUMBER_OF_THREADS = 4;
+
+    static final ExecutorService databaseWriterExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     //making a singleton
     public static WordRoomDatabase getDatabase(final Context context) {
@@ -35,14 +43,21 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
-            new RoomDatabase.Callback(){
 
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            final String[] words = {"dolphin", "crocodile", "kobra"};
+            databaseWriterExecutor.execute(new Runnable() {
                 @Override
-                public void onOpen (@NonNull SupportSQLiteDatabase db){
-                    super.onOpen(db);
+                public void run() {
+                    WordDao dao = INSTANCE.wordDao();
+                    for (String word : words) {
+                        dao.insert(new Word(word));
+                    }
                 }
-            };
-
-
+            });
+        }
+    };
 }

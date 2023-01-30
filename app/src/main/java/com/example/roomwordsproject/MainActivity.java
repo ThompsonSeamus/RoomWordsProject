@@ -1,10 +1,16 @@
 package com.example.roomwordsproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -28,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private WordViewModel mWordViewModel;
 
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewWordActivity.class);
+                mGetNewWord.launch(intent);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -64,8 +74,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //onOpen
-    
+    private ActivityResultLauncher<Intent> mGetNewWord = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == RESULT_OK){
+                        Word word = new Word(result.getData().getStringExtra(NewWordActivity.EXTRA_REPLY));
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Word not saved because it is empty", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+    );
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
