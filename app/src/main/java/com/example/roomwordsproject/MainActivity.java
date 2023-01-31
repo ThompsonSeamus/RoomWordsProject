@@ -22,9 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.roomwordssample.R;
-import com.example.roomwordssample.databinding.ActivityMainBinding;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.roomwordsproject.databinding.ActivityMainBinding;
 
 import java.util.List;
 
@@ -59,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewWordActivity.class);
                 mGetNewWord.launch(intent);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
