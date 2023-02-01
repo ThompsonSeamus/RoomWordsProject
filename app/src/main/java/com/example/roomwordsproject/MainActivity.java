@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == RESULT_OK){
                         Word word = new Word(result.getData().getStringExtra(NewWordActivity.EXTRA_REPLY));
+                        mWordViewModel.insert(word);
                     }
                     else{
                         Toast.makeText(MainActivity.this, "Word not saved because it is empty", Toast.LENGTH_SHORT).show();
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete_all) {
+            mWordViewModel.deleteAll();
             return true;
         }
 

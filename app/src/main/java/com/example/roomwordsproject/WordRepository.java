@@ -38,4 +38,15 @@ public class WordRepository {
             mWordDao.insert(word);
         }
     }
+
+    public void deleteAll(){
+        Executors.newSingleThreadExecutor().execute(new DeleteRunnable());
+    }
+
+    private class DeleteRunnable implements Runnable {
+        @Override
+        public void run() {
+            mWordDao.deleteAll();
+        }
+    }
 }
