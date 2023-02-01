@@ -38,6 +38,9 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         mWords = words;
         notifyDataSetChanged();
     }
+    public Word getWordAtPosition(int position){
+        return mWords.get(position);
+    }
 
     // getItemCount() is called many times, and when it is first called,
     // mWords has not been updated (means initially, it's null, and we can't return null).

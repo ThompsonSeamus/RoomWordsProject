@@ -49,4 +49,20 @@ public class WordRepository {
             mWordDao.deleteAll();
         }
     }
+
+    public void deleteWord(Word word){
+        Executors.newSingleThreadExecutor().execute(new DeleteWordRunnable(word));
+    }
+
+    private class DeleteWordRunnable implements Runnable {
+        Word word;
+        public DeleteWordRunnable(Word word) {
+            this.word = word;
+        }
+
+        @Override
+        public void run() {
+            mWordDao.deleteWord(word);
+        }
+    }
 }
