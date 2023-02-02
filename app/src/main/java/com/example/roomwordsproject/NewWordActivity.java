@@ -15,6 +15,11 @@ public class NewWordActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.example.android.roomwordsproject.REPLY";
 
+    public boolean isSavedWord;
+    public int id;
+    public String[] Words;
+    public int arrayLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +28,9 @@ public class NewWordActivity extends AppCompatActivity {
         //Text watcher
         TextInputLayout inputLayout = findViewById(R.id.textInputLayout);
         EditText editWordView = inputLayout.getEditText();
-        Button button = findViewById(R.id.save_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button saveButton = findViewById(R.id.save_button);
+        Button cancelButton = findViewById(R.id.cancel_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent replyIntent = new Intent();
@@ -37,6 +43,13 @@ public class NewWordActivity extends AppCompatActivity {
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED, new Intent());
             }
         });
 

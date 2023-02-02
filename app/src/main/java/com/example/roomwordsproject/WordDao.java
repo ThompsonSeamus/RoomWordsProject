@@ -7,6 +7,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface WordDao {
 
     @Query("SELECT * FROM word_table ORDER BY word COLLATE NOCASE ASC")
     LiveData<List<Word>> getAllWords();
+
+    @Update
+    void update(Word... word);
 }
