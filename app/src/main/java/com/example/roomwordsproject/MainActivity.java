@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private WordViewModel mWordViewModel;
 
+    public static final String WORD_ID = "word_id";
+    public static final String WORD_WORD = "word_word";
+
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
@@ -122,4 +125,34 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void updateWord(Word word) {
+        Intent intent = new Intent(MainActivity.this, NewWordActivity.class);
+        intent.putExtra(WORD_ID, word.getId());
+        intent.putExtra(WORD_WORD, word.getWord());
+        mGetNewWord.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> getmGetNewWord = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == RESULT_OK) {
+                        Word word;
+                        String strWord = result.getData().getStringExtra(WORD_WORD);
+
+                        int id = result.getData().getIntExtra(WORD_ID, -1);
+                        if(id >= 0){
+                            word = new Word(strWord, id);
+                            mWordViewModel.updateWord(word);
+                        } else{
+                            word = new Word(strWord);
+                            mWordViewModel.insert(word);
+                        }
+
+                    }
+                }
+            }
+
+    );
 }

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,10 +16,7 @@ public class NewWordActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.example.android.roomwordsproject.REPLY";
 
-    public boolean isSavedWord;
     public int id;
-    public String[] Words;
-    public int arrayLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,27 +27,30 @@ public class NewWordActivity extends AppCompatActivity {
         TextInputLayout inputLayout = findViewById(R.id.textInputLayout);
         EditText editWordView = inputLayout.getEditText();
         Button saveButton = findViewById(R.id.save_button);
-        Button cancelButton = findViewById(R.id.cancel_button);
+
+        //intent tings
+        String strWord = getIntent().getStringExtra(MainActivity.WORD_WORD);
+        int id = getIntent().getIntExtra(MainActivity.WORD_ID, -1);
+
+
+        if(strWord != ""){
+            editWordView.setText(strWord);
+        }
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent replyIntent = new Intent();
                 if(TextUtils.isEmpty(editWordView.getText().toString())){
                     setResult(RESULT_CANCELED, replyIntent);
-                }
-                else{
+                    Toast.makeText(NewWordActivity.this, EXTRA_REPLY, Toast.LENGTH_SHORT).show();
+                } else{
                     String word = editWordView.getText().toString();
-                    replyIntent.putExtra(EXTRA_REPLY, word);
+                    replyIntent.putExtra(MainActivity.WORD_WORD, word);
+                    replyIntent.putExtra(MainActivity.WORD_ID, id);
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED, new Intent());
             }
         });
 
